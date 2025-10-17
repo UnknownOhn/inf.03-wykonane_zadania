@@ -1,0 +1,51 @@
+*{
+    font-family: Helvetica;
+}
+
+header, footer{
+    background-color: #FFD966;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    text-shadow: 5px 5px 10px black;
+}
+
+footer{
+    text-align: 120%;
+    clear: both;
+}
+
+main{
+    background-color: #FFD966;
+    width: 25%;
+    height: 450px;
+    float: left;
+}
+
+aside{
+    background-color: #C5E0B4;
+    width: 75%;
+    height: 450px;
+    text-align: center;
+    box-shadow: 0px 0px 15px black inset;
+    float: right;
+}
+
+table, th, td{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+table{
+    margin: auto;
+    width: 70%;
+}
+
+li{
+    list-style: square;
+    inline-size: 1.5;
+}
+
+a, h4{
+    color: seagreen;
+}
