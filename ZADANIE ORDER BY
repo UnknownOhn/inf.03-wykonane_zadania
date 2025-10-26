@@ -1,0 +1,71 @@
+-- zadanie 1 Wyświetl id_produktu, nazwa, cena posortowane po cenie malejąco
+SELECT produkty.id_produktu,produkty.nazwa,produkty.cena
+FROM produkty
+ORDER BY produkty.cena DESC;
+
+-- zadanie 2 Pokaż kategoria, produkt, cena (JOIN do kategorie) posortowane: nazwa kategorii A→Z, w ramach kategorii cena malejąco, potem nazwa produktu.
+SELECT kategorie.nazwa, produkty.nazwa,produkty.cena
+FROM produkty
+JOIN kategorie ON kategorie.id_kategorii = produkty.id_kategorii
+ORDER BY kategorie.nazwa,produkty.cena DESC;
+
+-- zadanie 3 Wyświetl miasto, nazwisko, imie posortowane: miasto wg kolacji polskiej, a następnie nazwisko, imię.
+SELECT klienci.miasto,klienci.nazwisko,klienci.imie
+FROM klienci
+ORDER BY klienci.miasto COLLATE utf8mb4_polish_ci,klienci.nazwisko,klienci.imie;
+
+-- zadanie 4 Posortuj id_zamowienia, status, data_zamowienia tak, by najpierw były 'zrealizowane', potem 'w realizacji', na końcu 'anulowane'; w każdej grupie najnowsze daty pierwsze.
+SELECT zamowienia.id_zamowienia, zamowienia.status,zamowienia.data_zamowienia
+FROM zamowienia
+ORDER BY
+CASE zamowienia.status
+    WHEN 'zrealizowane' THEN 1
+        WHEN 'w realizacji' THEN 2
+        WHEN 'anulowane' THEN 3
+        ELSE 4
+    END,
+    zamowienia.status DESC, zamowienia.data_zamowienia DESC;
+
+-- zadanie 5 Dla każdego klienta policz łączną zapłaconą kwotę (JOIN do platnosci), posortuj po tej sumie malejąco, klientów bez płatności umieść na końcu.
+SELECT klienci.imie,SUM(platnosci.kwota)
+FROM klienci
+JOIN zamowienia ON zamowienia.id_klienta = klienci.id_klienta
+JOIN platnosci ON platnosci.id_zamowienia = zamowienia.id_zamowienia
+GROUP BY klienci.imie
+ORDER BY SUM(platnosci.kwota) DESC;
+
+-- zadanie 6 Dla każdej kategorii policz średnią cenę produktów i posortuj po niej malejąco, a następnie po nazwie kategorii.
+SELECT kategorie.nazwa, AVG(produkty.cena)
+FROM kategorie
+JOIN produkty ON produkty.id_kategorii = kategorie.id_kategorii
+GROUP BY kategorie.nazwa
+ORDER BY AVG(produkty.cena) DESC,kategorie.nazwa;
+
+-- zadanie 7 Wyświetl 5 najnowszych zamówień (po dacie malejąco). Jeśli remis (czyli ta sama data) to posortuj wg kwoty.
+SELECT zamowienia.id_zamowienia,zamowienia.id_klienta,zamowienia.data_zamowienia,zamowienia.status
+FROM zamowienia
+JOIN platnosci ON platnosci.id_zamowienia = zamowienia.id_zamowienia
+ORDER BY zamowienia.data_zamowienia DESC,platnosci.kwota LIMIT 5;
+
+-- zadanie 8 Wypisz produkty, w których nazwa zawiera liczbę (np. Monitor 27", Monitor 24"), posortuj rosnąco po tej liczbie (naturalny porządek), a następnie po nazwie.
+SELECT *
+FROM produkty
+WHERE produkty.nazwa LIKE "%27%"
+ORDER BY produkty.nazwa;
+
+SELECT *
+FROM platnosci
+ORDER BY
+CASE metoda
+    WHEN 'Karta' THEN 1
+        WHEN 'Blik' THEN 2
+        ELSE 3
+    END,
+    metoda DESC;
+   
+SELECT 8
+FROM klienci
+ORDER BY klienci.nazwisko COLLATE utf8mb8_polish_ci
+LIMIT 10;
+
+-- źle utf8_polish_ci
