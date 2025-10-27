@@ -1,0 +1,101 @@
+-- 1 Policz wszystkich klientów w tabeli klienci.
+SELECT COUNT(klienci.id) AS 'Ilość klientów'
+FROM klienci;
+
+-- 2 Znajdź średnią cenę produktów.
+SELECT AVG(produkty.cena) AS 'Średnia cena'
+FROM produkty;
+
+-- 3 Wyświetl najtańszy i najdroższy produkt.
+SELECT MIN(produkty.cena), MAX(produkty.cena) AS 'Maksymalna i minimalna cena', produkty.nazwa
+FROM produkty;
+
+-- 4 Policz liczbę wszystkich zamówień.
+SELECT COUNT(zamowienia.ilosc) AS 'ilość zamówień'
+FROM zamowienia;
+
+-- 5 Oblicz łączną liczbę sprzedanych produktów (suma ilosc z tabeli zamowienia).
+SELECT SUM(zamowienia.ilosc)
+FROM zamowienia;
+
+-- 6 Policz, ilu klientów pochodzi z każdego miasta.
+SELECT COUNT(klienci.id), klienci.miasto
+FROM klienci
+GROUP BY klienci.miasto;
+
+-- 7 Wyświetl sumę wartości zamówionych produktów (ilość × cena) dla każdego klienta.
+SELECT SUM(zamowienia.ilosc * produkty.cena) AS 'wartość zam. produktów', klienci.imie
+FROM zamowienia
+JOIN produkty ON zamowienia.produkt_id = produkty.id
+JOIN klienci ON zamowienia.klient_id = klienci.id
+GROUP BY klienci.id;
+
+-- 8 Oblicz średnią cenę produktów w każdej kategorii.
+SELECT AVG(produkty.cena), produkty.kategoria
+FROM produkty
+GROUP BY produkty.kategoria;
+
+-- 9 Policz, ile produktów znajduje się w każdej kategorii.
+SELECT COUNT(produkty.kategoria), produkty.kategoria
+FROM produkty
+GROUP BY produkty.kategoria;
+
+-- 10 Wyświetl liczbę zamówień złożonych przez każdego klienta.
+SELECT COUNT(zamowienia.ilosc) AS 'Ilośc zamówień', klienci.imie
+FROM zamowienia
+JOIN klienci ON klienci.id = zamowienia.klient_id
+GROUP BY klienci.imie;
+
+-- 11 Wyświetl tylko te kategorie produktów, w których średnia cena przekracza 500 zł.
+SELECT AVG(produkty.cena) AS 'Srednia cena', produkty.kategoria
+FROM produkty
+HAVING AVG(produkty.cena) > 500;
+
+-- 12 Znajdź klientów, którzy złożyli więcej niż 2 zamówienia.
+SELECT COUNT(zamowienia.id) AS 'Ilość zamówień', klienci.imie
+FROM klienci
+JOIN zamowienia ON klienci.id = zamowienia.klient_id
+GROUP BY klienci.id;
+
+-- 13 Wyświetl miasta, z których pochodzi więcej niż jeden klient.
+SELECT COUNT(klienci.id), klienci.miasto
+FROM klienci
+GROUP BY klienci.miasto
+HAVING COUNT(klienci.id) > 1;
+
+-- 14 Pokaż klientów, których łączna wartość zamówień przekracza 3000 zł.
+SELECT SUM(zamowienia.ilosc * produkty.cena), klienci.imie
+FROM zamowienia
+JOIN klienci ON klienci.id = zamowienia.klient_id
+JOIN produkty ON produkty.id = zamowienia.produkt_id
+GROUP BY klienci.imie
+HAVING SUM(zamowienia.ilosc * produkty.cena) > 3000;
+
+-- 15 Która kategoria produktów przyniosła najwyższy łączny przychód?
+SELECT MAX(zamowienia.ilosc * produkty.cena), produkty.kategoria
+FROM zamowienia
+JOIN produkty ON produkty.id = zamowienia.produkt_id
+GROUP BY produkty.kategoria
+ORDER BY MAX(zamowienia.ilosc * produkty.cena) DESC
+LIMIT 1;
+
+-- 16 Wyznacz produkt, który sprzedał się w największej liczbie sztuk.
+SELECT SUM(zamowienia.ilosc), produkty.nazwa
+FROM produkty
+JOIN zamowienia ON zamowienia.produkt_id = produkty.id
+GROUP BY produkty.nazwa
+ORDER BY SUM(zamowienia.ilosc) DESC
+LIMIT 1;
+
+-- 17 Oblicz średnią wartość pojedynczego zamówienia w całym sklepie.
+SELECT AVG(zamowienia.ilosc * produkty.cena)
+FROM zamowienia
+JOIN produkty ON produkty.id = zamowienia.produkt_id;
+
+-- 18 Pokaż klienta, który złożył największą liczbę zamówień.
+SELECT COUNT(zamowienia.id), klienci.imie
+FROM zamowienia
+JOIN klienci ON klienci.id = zamowienia.klient_id
+GROUP BY klienci.imie
+ORDER BY COUNT(zamowienia.id) DESC
+LIMIT 1;
