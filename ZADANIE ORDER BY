@@ -65,7 +65,7 @@ CASE metoda
    
 SELECT 8
 FROM klienci
-ORDER BY klienci.nazwisko COLLATE utf8mb8_polish_ci
+ORDER BY klienci.nazwisko COLLATE utf8mb4_general_ci
 LIMIT 10;
 
 -- źle utf8_polish_ci
