@@ -1,5 +1,5 @@
 -- 1 Policz wszystkich klientów w tabeli klienci.
-SELECT COUNT(klienci.id) AS 'Ilość klientów'
+SELECT COUNT(*) AS 'Ilość klientów'
 FROM klienci;
 
 -- 2 Znajdź średnią cenę produktów.
