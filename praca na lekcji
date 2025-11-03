@@ -1,0 +1,40 @@
+-- 1 sposób
+SELECT pracownik.NAZWISKO, pracownik.STANOWISKO, pracownik.ZATRUDNIONY, pracownik.PLACA_POD
+FROM pracownik
+WHERE pracownik.ODDZIAL_ID > 20;
+
+SELECT pracownik.NAZWISKO, pracownik.STANOWISKO, pracownik.ZATRUDNIONY, pracownik.PLACA_POD
+FROM pracownik
+WHERE pracownik.ODDZIAL_ID > 20 AND pracownik.ZATRUDNIONY > '2000-01-01';
+
+SELECT *
+FROM (SELECT NAZWISKO, STANOWISKO, ZATRUDNIONY, PLACA_POD
+FROM pracownik
+WHERE pracownik.ODDZIAL_ID > 20) as prac
+where prac.ZATRUDNIONY >= '2000-01-01';
+
+-- 2 sposób
+SELECT pracownik.NAZWISKO, pracownik.STANOWISKO, pracownik.PLACA_POD, AVG(pracownik.PLACA_POD)
+FROM pracownik;
+
+SELECT pracownik.NAZWISKO, 
+	   pracownik.STANOWISKO, 
+       pracownik.PLACA_POD,
+       (SELECT AVG(pracownik.PLACA_POD) 
+        FROM pracownik) AS "srednia",
+        pracownik.PLACA_POD*100/(SELECT AVG(pracownik.PLACA_POD) FROM pracownik) AS "procent"
+FROM pracownik
+ORDER BY pracownik.PLACA_POD*100/(SELECT AVG(pracownik.PLACA_POD) FROM pracownik) > 200;
+
+SELECT *
+FROM pracownik
+where pracownik.ODDZIAL_ID IN (20, 30);
+
+SELECT pracownik.NAZWISKO, 
+	   pracownik.STANOWISKO, 
+       pracownik.PLACA_POD,
+       (SELECT AVG(pracownik.PLACA_POD) 
+        FROM pracownik WHERE pracownik.ODDZIAL_ID IN (10)) AS "srednia",
+        pracownik.PLACA_POD*100/(SELECT AVG(pracownik.PLACA_POD) FROM pracownik WHERE pracownik.ODDZIAL_ID IN (10)) AS "procent"
+FROM pracownik
+WHERE pracownik.ODDZIAL_ID IN (20, 30);
