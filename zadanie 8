@@ -1,0 +1,39 @@
+-- 3 Napisz podzapytanie, które znajdzie identyfikator kraju United States. Używając tego podzapytania napisz kolejne podzapytanie, które zwróci identyfikatory wszystkich miast leżących w tym kraju. Używając poprzedniego podzapytania napisz podzapytanie zwracające wszystkie identyfikatory wszystkich adresów znajdujących się w tych miastach. Na podstawie poprzedniego podzapytania napisz zapytanie zwracające listę klientów mieszkających pod wybranymi adresami. W efekcie powinniśmy otrzymać listę klientów zamieszkałych w Stanach Zjednoczonych.
+	SELECT klient.klient_id, klient.imie, klient.nazwisko
+    FROM klient
+    WHERE klient.adres_id IN (SELECT adres.adres_id
+			FROM adres
+			WHERE adres.miasto_id IN (SELECT miasto.miasto_id
+				FROM miasto
+				WHERE miasto.kraj_id IN (SELECT kraj.kraj_id
+					FROM kraj
+					WHERE kraj.kraj = "United State")));
+
+-- 4 Wzorując się na poprzednim zadaniu napisz zapytanie pokazujące kwoty z tabeli płatność dla klientów z miasta London.
+SELECT platnosc.platnosc_id, platnosc.kwota
+FROM platnosc
+WHERE platnosc.klient_id IN (SELECT klient.klient_id
+        FROM klient
+        WHERE klient.adres_id IN (SELECT adres.adres_id
+			FROM adres
+			WHERE adres.miasto_id IN (SELECT miasto.miasto_id
+					FROM miasto
+					WHERE miasto.miasto = "London")));
+
+-- 5 Na podstawie danych z poprzedniego zadania napisz zapytanie zwracające sumę kwot klientów z miasta London.
+SELECT SUM(platnosc.kwota), platnosc.platnosc_id
+FROM platnosc
+WHERE platnosc.klient_id IN (SELECT klient.klient_id
+        FROM klient
+        WHERE klient.adres_id IN (SELECT adres.adres_id
+			FROM adres
+			WHERE adres.miasto_id IN (SELECT miasto.miasto_id
+					FROM miasto
+					WHERE miasto.miasto = "London")));
+
+-- 6 Napisz:
+-- podzapytanie grupujące obliczające ilość adresów znajdujących się w każdym mieście – zapytanie powinno zwrócić z tabeli adres pola: miasto_id oraz count(*) as ile.
+-- Używając klauzuli HAVING dopisz do poprzedniego podzapytania warunek na ile>1
+-- Napisz podzapytanie wybierające z poprzedniego podzapytania tylko pole miasto_id.
+-- Na podstawie poprzedniego podzapytania napisz zapytanie zwracające listę miast, w których ilość adresów jest większa niż 1.
+
