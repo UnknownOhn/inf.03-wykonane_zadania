@@ -1,0 +1,25 @@
+CREATE TABLE pracownik3 (
+    pracownik_id  INT PRIMARY KEY AUTO_INCREMENT,
+	nazwisko  VARCHAR(25) NOT NULL,
+    stanowisko  VARCHAR(25) NOT NULL,
+    przelozone_nazwisko VARCHAR(25) NOT NULL,
+    zatrudniony DATE NOT NULL,
+    placa_pod DECIMAL(6, 2),
+    placa_pot DECIMAL(6, 2),
+    odzial_nazwa VARCHAR(20)
+);
+
+INSERT into pracownik3
+	SELECT 
+    pr.PRACOWNIK_ID,
+    pr.NAZWISKO,
+    pr.STANOWISKO,
+    (SELECT nazwisko 
+    FROM pracownik
+    WHERE pr.PRZELOZONY_ID = PRACOWNIK_ID) AS przelozony_nazwisko,
+    pr.zatrudniony,
+    pr.PLACA_POD,
+    pr.PLACA_DOD,
+    od.NAZWA AS odzial_nazwa
+FROM pracownik pr
+left JOIN oddzial od ON pr.ODDZIAL_ID = od.ODDZIAL_ID;
