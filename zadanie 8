@@ -140,13 +140,13 @@ JOIN (
         GROUP BY kraj_id
         HAVING ile > 10
     ) AS popularne_kraje
-) AS poplarne_kraje ON kraj.kraj_id = popularne_kraje.kraj_id;
+) AS pk ON kraj.kraj_id = pk.kraj_id;
     
 -- 11 Wzorując się na zadaniu 10 napisz zapytanie zwracające listę filmów, które wypożyczono więcej niż 10 razy.
 
 SELECT film.tytul, COUNT(wypozyczenie.wypozyczenie_id) AS liczba_wypozyczen
 FROM film
-JOIN spis ON FIRST.film_id = spis.film_id
+JOIN spis ON film.film_id = spis.film_id
 JOIN wypozyczenie ON spis.spis_id = wypozyczenie.spis_id
 WHERE film.film_id IN (
     SELECT film_id
@@ -187,7 +187,7 @@ FROM (
     FROM kategoria
 ) AS kategorie
 JOIN (
-    SELECT kategoria_id, COUNT(film.film_id) AS ile
+    SELECT kategoria_id, COUNT(film_kategoria.film_id) AS ile
     FROM film_kategoria
     GROUP BY kategoria_id
 ) AS liczby ON kategorie.kategoria_id = liczby.kategoria_id;
@@ -205,7 +205,7 @@ GROUP BY kategoria.kategoria_id, kategoria.nazwa;
 
 -- 15 Używając podzapytań i złączeń napisz zapytanie zwracające informację o tym ile filmów z każdej kategorii było wypożyczanych w każdym kraju. Zestawienie powinno zawierać następujące pola: nazwa kraju, nazwa kategorii, ilość filmów.
 
-SELECT kraj.kraj, kraj.nazwa AS kategoria, COUNT(DISTINCT film.film_id) AS liczba_filmow
+SELECT kraj.kraj, kraj.kraj AS kategoria, COUNT(DISTINCT film.film_id) AS liczba_filmow
 FROM kraj
 JOIN miasto ON kraj.kraj_id = miasto.kraj_id
 JOIN adres ON miasto.miasto_id = adres.miasto_id
