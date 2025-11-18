@@ -54,9 +54,9 @@ WHERE platnosc.klient_id IN (SELECT klient.klient_id
 -- Używając klauzuli HAVING dopisz do poprzedniego podzapytania warunek na ile>1
 -- Napisz podzapytanie wybierające z poprzedniego podzapytania tylko pole miasto_id.
 -- Na podstawie poprzedniego podzapytania napisz zapytanie zwracające listę miast, w których ilość adresów jest większa niż 1.
-SELECT m.miasto, m.miasto_id
-FROM miasto m
-WHERE m.miasto_id IN (
+SELECT miasto.miasto, miasto.miasto_id
+FROM miasto 
+WHERE miasto.miasto_id IN (
     SELECT miasto_id
     FROM (
         SELECT miasto_id, COUNT(*) AS ile
@@ -66,11 +66,11 @@ WHERE m.miasto_id IN (
     ) AS miasta_wiele_adresow
 
 -- 7
-SELECT SUM(p.kwota) AS suma_platnosci
-FROM platnosc p
-WHERE p.klient_id IN (
-    SELECT k.klient_id
-    FROM klient k
+SELECT SUM(platnosc.kwota) AS suma_platnosci
+FROM platnosc 
+WHERE platnosc.klient_id IN (
+    SELECT klient.klient_id
+    FROM klient 
     WHERE k.adres_id IN (
         SELECT a.adres_id
         FROM adres a
