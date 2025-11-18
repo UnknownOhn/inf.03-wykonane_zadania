@@ -1,17 +1,17 @@
 -- 1. Pełny adres klientów z Polski
 SELECT adres, okreg, miasto, kod_pocztowy, kraj
 FROM (
-    SELECT a.adres, a.okreg, m.miasto, a.kod_pocztowy, k.kraj
-    FROM adres a
-    JOIN miasto m ON a.miasto_id = m.miasto_id
-    JOIN kraj k ON m.kraj_id = k.kraj_id
+    SELECT adres.adres, adres.okreg, miasto.miasto, adres.kod_pocztowy, kraj.kraj
+    FROM adres 
+    JOIN miasto ON adres.miasto_id = miasto.miasto_id
+    JOIN kraj ON miasto.kraj_id = kraj.kraj_id
 ) AS pelne_adresy
 WHERE kraj = 'Poland';
 
 -- 2. Lista klientów z okręgu Texas
-SELECT k.imie, k.nazwisko, k.email
-FROM klient k
-WHERE k.adres_id IN (
+SELECT klient.imie, klient.nazwisko, klient.email
+FROM klient 
+WHERE klient.adres_id IN (
     SELECT adres_id
     FROM adres
     WHERE okreg = 'Texas'
