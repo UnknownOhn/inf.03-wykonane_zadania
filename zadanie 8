@@ -65,16 +65,17 @@ WHERE miasto.miasto_id IN (
         HAVING ile > 1
     ) AS miasta_wiele_adresow
 
--- 7
+-- 7 Na podstawie poprzedniego zadania napisz zapytanie zwracające sumę kwot (tabela platnosc) z miast, w których ilość adresów jest większa niż 1.
+
 SELECT SUM(platnosc.kwota) AS suma_platnosci
 FROM platnosc 
 WHERE platnosc.klient_id IN (
     SELECT klient.klient_id
     FROM klient 
-    WHERE k.adres_id IN (
-        SELECT a.adres_id
-        FROM adres a
-        WHERE a.miasto_id IN (
+    WHERE klient.adres_id IN (
+        SELECT adres.adres_id
+        FROM adres 
+        WHERE adres.miasto_id IN (
             SELECT miasto_id
             FROM (
                 SELECT miasto_id, COUNT(*) AS ile
@@ -86,50 +87,158 @@ WHERE platnosc.klient_id IN (
     )
 );
 
--- 8
-SELECT a.imie, a.nazwisko, COUNT(fa.film_id) AS liczba_filmow
-FROM aktor a
-JOIN film_aktor fa ON a.aktor_id = fa.aktor_id
-WHERE a.aktor_id IN (
+-- 8 Wzorując się na zadaniu 6 napisz zapytanie, które za pomocą podzapytań pokaże listę aktorów grających w więcej niż 20 filmach.
+
+SELECT aktor.imie, aktor.nazwisko, COUNT(film.film_id) AS liczba_filmow
+FROM aktor 
+JOIN film_aktor ON aktor.aktor_id = film.aktor_id
+WHERE aktor.aktor_id IN (
     SELECT aktor_id
     FROM (
-        SELECT aktor_id, COUNT(film_id) AS ile_filmow
+        SELECT film.aktor_id, COUNT(film.film_id) AS ile_filmow
         FROM film_aktor
         GROUP BY aktor_id
         HAVING COUNT(film_id) > 20
     ) AS aktywni_aktorzy
 )
-GROUP BY a.aktor_id, a.imie, a.nazwisko;
+GROUP BY aktor.aktor_id, aktor.imie, aktor.nazwisko;
 
--- 9
-SELECT f.tytul, f.film_id
-FROM film f
-WHERE f.film_id IN (
-    SELECT fc.film_id
-    FROM film_kategoria fc
-    WHERE fc.kategoria_id = (
-        SELECT kategoria_id
+-- 9 Używając podzapytań wypisz listę filmów należących do kategorii: Akcja.
+
+SELECT film.tytul, film.film_id
+FROM film 
+WHERE film.film_id IN (
+    SELECT film_kategoria.film_id
+    FROM film_kategoria 
+    WHERE film_kategoria.kategoria_id = (
+        SELECT film_kategoria
         FROM kategoria
         WHERE nazwa = 'Akcja'
     )
 );
 
--- 10
-SELECT k.imie, k.nazwisko, kr.kraj
-FROM klient k
-JOIN adres a ON k.adres_id = a.adres_id
-JOIN miasto m ON a.miasto_id = m.miasto_id
-JOIN kraj kr ON m.kraj_id = kr.kraj_id
+-- 10 Napisz zapytanie zwracające listę klientów, z krajów w których liczba klientów przekracza 10.
+-- Napisz podzapytanie pokazujące listę kraj_id dla każdego adresu, zapytanie powinno zwracać adres_id i kraj_id,
+-- Na podstawie danych zwróconych przez poprzednie podzapytanie napisz podzapytanie zwracające ilość adresów dla każdego kraj_id. Zapytanie powinno zwracać: kraj_id i count(adres_id) AS ile,
+-- Do poprzedniego zapytania dopisz klauzulę HAVING ile>10,
+-- Napisz zapytanie łączące tabele: klient, adres miasto, kraj i poprzednie podzapytanie zwracające listę klientów z krajów, w których liczba klientów przekracza 10
+
+SELECT klient.imie, klient.nazwisko, kraj.kraj
+FROM klient 
+JOIN adres ON klient.adres_id = adres.adres_id
+JOIN miasto ON adres.miasto_id = miasto.miasto_id
+JOIN kraj ON miasto.kraj_id = kraj.kraj_id
 JOIN (
     SELECT kraj_id
     FROM (
         SELECT kraj_id, COUNT(adres_id) AS ile
         FROM (
-            SELECT a.adres_id, m.kraj_id
-            FROM adres a
-            JOIN miasto m ON a.miasto_id = m.miasto_id
+            SELECT adres.adres_id, miasto.kraj_id
+            FROM adres 
+            JOIN miasto miasto ON adres.miasto_id = miasto.miasto_id
         ) AS adresy_kraje
         GROUP BY kraj_id
         HAVING ile > 10
     ) AS popularne_kraje
-) AS pk ON kr.kraj_id = pk.kraj_id;
+) AS poplarne_kraje ON kraj.kraj_id = popularne_kraje.kraj_id;
+    
+-- 11 Wzorując się na zadaniu 10 napisz zapytanie zwracające listę filmów, które wypożyczono więcej niż 10 razy.
+
+SELECT film.tytul, COUNT(wypozyczenie.wypozyczenie_id) AS liczba_wypozyczen
+FROM film
+JOIN spis ON FIRST.film_id = spis.film_id
+JOIN wypozyczenie ON spis.spis_id = wypozyczenie.spis_id
+WHERE film.film_id IN (
+    SELECT film_id
+    FROM (
+        SELECT spis.film_id, COUNT(wypozyczenie.wypozyczenie_id) AS ile_razy
+        FROM spis
+        JOIN wypozyczenie ON spis.spis_id = wypozyczenie.spis_id
+        GROUP BY spis.film_id
+        HAVING ile_razy > 10
+    ) AS popularne_filmy
+)
+GROUP BY film.film_id, film.tytul;
+
+-- 12 Na podstawie zapytania 11 wypisz dla każdego filmu zsumowane płatności filmów, które wypożyczono więcej niż 10 razy.
+
+SELECT film.tytul, SUM(platnosc.kwota) AS suma_platnosci
+FROM film
+JOIN spis ON film.film_id = spis.film_id
+JOIN wypozyczenie ON spis.spis_id = wypozyczenie.spis_id
+JOIN platnosc ON wypozyczenie.wypozyczenie_id = platnosc.wypozyczenie_id
+WHERE film.film_id IN (
+    SELECT film_id
+    FROM (
+        SELECT spis.film_id, COUNT(wypozyczenie.wypozyczenie_id) AS ile
+        FROM spis
+        JOIN wypozyczenie ON spis.spis_id = wypozyczenie.spis_id
+        GROUP BY spis.film_id
+        HAVING ile > 10
+    ) AS popularne
+)
+GROUP BY film.film_id, film.tytul;
+
+-- 13 Używając podzapytań napisz zapytanie zwracające listę kategorii wraz z liczbą filmów w danej kategorii:
+
+SELECT kategorie.nazwa, liczby.ile
+FROM (
+    SELECT kategoria_id, nazwa
+    FROM kategoria
+) AS kategorie
+JOIN (
+    SELECT kategoria_id, COUNT(film.film_id) AS ile
+    FROM film_kategoria
+    GROUP BY kategoria_id
+) AS liczby ON kategorie.kategoria_id = liczby.kategoria_id;
+
+-- 14 Używając podzapytań i złączeń napisz zapytanie zwracające sumę kwot płatności z każdej kategorii.
+
+SELECT kategoria.nazwa AS kategoria, SUM(platnosc.kwota) AS suma_platnosci
+FROM kategoria
+JOIN film_kategoria ON kategoria.kategoria_id = film_kategoria.kategoria_id
+JOIN film ON film_kategoria.film_id = film.film_id
+JOIN spis ON film.film_id = spis.film_id
+JOIN wypozyczenie ON spis.spis_id = wypozyczenie.spis_id
+JOIN platnosc ON wypozyczenie.wypozyczenie_id = platnosc.wypozyczenie_id
+GROUP BY kategoria.kategoria_id, kategoria.nazwa;
+
+-- 15 Używając podzapytań i złączeń napisz zapytanie zwracające informację o tym ile filmów z każdej kategorii było wypożyczanych w każdym kraju. Zestawienie powinno zawierać następujące pola: nazwa kraju, nazwa kategorii, ilość filmów.
+
+SELECT kraj.kraj, kraj.nazwa AS kategoria, COUNT(DISTINCT film.film_id) AS liczba_filmow
+FROM kraj
+JOIN miasto ON kraj.kraj_id = miasto.kraj_id
+JOIN adres ON miasto.miasto_id = adres.miasto_id
+JOIN klient ON adres.adres_id = klient.adres_id
+JOIN wypozyczenie ON klient.klient_id = wypozyczenie.klient_id
+JOIN spis ON wypozyczenie.spis_id = spis.spis_id
+JOIN film ON spis.film_id = film.film_id
+JOIN film_kategoria ON film.film_id = film_kategoria.film_id
+JOIN kategoria ON film_kategoria.kategoria_id = kategoria.kategoria_id
+GROUP BY kraj.kraj_id, kraj.kraj, kategoria.kategoria_id, kategoria.nazwa;
+
+-- 16 Używając podzapytań i złączeń napisz zapytanie zwracające informację o tym jaka była suma kwot płatności filmów z każdej kategorii w każdym kraju. Zestawienie powinno zawierać następujące pola: nazwa kraju, nazwa kategorii, suma kwoty płatności.
+
+SELECT kraj.kraj, kategoria.nazwa AS kategoria, SUM(platnosc.kwota) AS suma_platnosci
+FROM kraj
+JOIN miasto ON kraj.kraj_id = miasto.kraj_id
+JOIN adres  ON miasto.miasto_id = adres.miasto_id
+JOIN klient ON adres.adres_id = klient.adres_id
+JOIN platnosc ON klient.klient_id = platnosc.klient_id
+JOIN wypozyczenie ON platnosc.wypozyczenie_id = wypozyczenie.wypozyczenie_id
+JOIN spis ON wypozyczenie.spis_id = spis.spis_id
+JOIN film ON spis.film_id = film.film_id
+JOIN film_kategoria ON film.film_id = film_kategoria.film_id
+JOIN kategoria ON film_kategoria.kategoria_id = kategoria.kategoria_id
+GROUP BY kraj.kraj_id, kraj.kraj, kategoria.kategoria_id, kategoria.nazwa;
+
+-- 17 Używając podzapytań i złączeń napisz zapytanie zwracające ilość filmów wypożyczonych przez każdy ze sklepów w każdym z krajów. Zestawienie powinno zawierać: pełny adres sklepu, nazwę kraju i ilość wypożyczeń.
+
+SELECT CONCAT(adres.adres, ', ', adres.okreg, ', ', miasto.miasto) AS pelny_adres_sklepu, kraj.kraj, COUNT(wypozyczenie.wypozyczenie_id) AS liczba_wypozyczen
+FROM sklep
+JOIN adres ON sklep.adres_id = adres.adres_id
+JOIN miasto ON adres.miasto_id = miasto.miasto_id
+JOIN kraj ON miasto.kraj_id = kraj.kraj_id
+JOIN spis ON sklep.sklep_id = spis.sklep_id
+JOIN wypozyczenie ON spis.spis_id = wypozyczenie.spis_id
+GROUP BY sklep.sklep_id, adres.adres, adres.okreg, miasto.miasto, kraj.kraj;
