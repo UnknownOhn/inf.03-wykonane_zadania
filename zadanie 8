@@ -242,3 +242,160 @@ JOIN kraj ON miasto.kraj_id = kraj.kraj_id
 JOIN spis ON sklep.sklep_id = spis.sklep_id
 JOIN wypozyczenie ON spis.spis_id = wypozyczenie.spis_id
 GROUP BY sklep.sklep_id, adres.adres, adres.okreg, miasto.miasto, kraj.kraj;
+
+-- 18. Suma płatności per sklep per kraj
+SELECT CONCAT(a.adres, ', ', a.okreg, ', ', m.miasto) AS pelny_adres_sklepu, kr.kraj, SUM(p.kwota) AS suma_platnosci
+FROM sklep sk
+JOIN adres a ON sk.adres_id = a.adres_id
+JOIN miasto m ON a.miasto_id = m.miasto_id
+JOIN kraj kr ON m.kraj_id = kr.kraj_id
+JOIN spis s ON sk.sklep_id = s.sklep_id
+JOIN wypozyczenie w ON s.spis_id = w.spis_id
+JOIN platnosc p ON w.wypozyczenie_id = p.wypozyczenie_id
+GROUP BY sk.sklep_id, a.adres, a.okreg, m.miasto, kr.kraj;
+
+-- 19. Suma długości filmów w kategorii
+SELECT k.nazwa AS kategoria, SUM(f.dlugosc) AS suma_dlugosci_minut
+FROM kategoria k
+JOIN film_kategoria fk ON k.kategoria_id = fk.kategoria_id
+JOIN film f ON fk.film_id = f.film_id
+GROUP BY k.kategoria_id, k.nazwa;
+
+-- 20. Jak często klient ogląda danego aktora
+SELECT CONCAT(kl.imie, ' ', kl.nazwisko) AS klient, CONCAT(a.imie, ' ', a.nazwisko) AS aktor, COUNT(DISTINCT w.wypozyczenie_id) AS liczba_obejrzan
+FROM klient kl
+JOIN wypozyczenie w ON kl.klient_id = w.klient_id
+JOIN spis s ON w.spis_id = s.spis_id
+JOIN film f ON s.film_id = f.film_id
+JOIN film_aktor fa ON f.film_id = fa.film_id
+JOIN aktor a ON fa.aktor_id = a.aktor_id
+GROUP BY kl.klient_id, kl.imie, kl.nazwisko, a.aktor_id, a.imie, a.nazwisko;
+
+-- 21. Jak często klient ogląda filmy z danej kategorii wiekowej
+SELECT CONCAT(k.imie, ' ', k.nazwisko) AS klient, f.ocena AS kategoria_wiekowa, COUNT(w.wypozyczenie_id) AS liczba_obejrzan
+FROM klient k
+JOIN wypozyczenie w ON k.klient_id = w.klient_id
+JOIN spis s ON w.spis_id = s.spis_id
+JOIN film f ON s.film_id = f.film_id
+GROUP BY k.klient_id, k.imie, k.nazwisko, f.ocena;
+
+-- 22. Stwórz tabelę film_akcja i wypełnij filmami kategorii Akcja
+CREATE TABLE film_akcja LIKE film;
+
+INSERT INTO film_akcja
+SELECT f.*
+FROM film f
+WHERE f.film_id IN (
+    SELECT fc.film_id
+    FROM film_kategoria fc
+    WHERE fc.kategoria_id = (
+        SELECT kategoria_id
+        FROM kategoria
+        WHERE nazwa = 'Akcja'
+    )
+);
+
+-- 23. Zwiększ koszty wymiany < średniej do średniej
+UPDATE film_akcja
+SET koszty_wymiany = (
+    SELECT AVG(koszty_wymiany)
+    FROM (SELECT koszty_wymiany FROM film_akcja) AS temp
+)
+WHERE koszty_wymiany < (
+    SELECT AVG(koszty_wymiany)
+    FROM (SELECT koszty_wymiany FROM film_akcja) AS temp2
+);
+
+-- 24. Zwiększ o 10% koszty wymiany < średniej
+UPDATE film_akcja
+SET koszty_wymiany = koszty_wymiany * 1.10
+WHERE koszty_wymiany < (
+    SELECT AVG(koszty_wymiany)
+    FROM (SELECT koszty_wymiany FROM film_akcja) AS temp
+);
+
+-- 25. Zwiększ o 10% stawki wypożyczenia dla filmów >120 minut
+UPDATE film_akcja
+SET stawka_wypozycz = stawka_wypozycz * 1.10
+WHERE dlugosc > 120;
+
+-- 26. Zmniejsz o 20% stawki dla filmów z JOHNNY LOLLOBRIGIDA lub ZERO CAGE
+UPDATE film_akcja
+SET stawka_wypozycz = stawka_wypozycz * 0.80
+WHERE film_id IN (
+    SELECT DISTINCT fa.film_id
+    FROM film_aktor fa
+    JOIN aktor a ON fa.aktor_id = a.aktor_id
+    WHERE (a.imie = 'JOHNNY' AND a.nazwisko = 'LOLLOBRIGIDA')
+       OR (a.imie = 'ZERO' AND a.nazwisko = 'CAGE')
+);
+
+-- 27. Zwiększ o 20% stawki filmów z sumą płatności > średniej
+UPDATE film_akcja fa
+SET fa.stawka_wypozycz = fa.stawka_wypozycz * 1.20
+WHERE fa.film_id IN (
+    SELECT film_id
+    FROM (
+        SELECT f.film_id, SUM(p.kwota) AS suma_platnosci
+        FROM film f
+        JOIN film_kategoria fk ON f.film_id = fk.film_id
+        JOIN kategoria k ON fk.kategoria_id = k.kategoria_id
+        JOIN spis s ON f.film_id = s.film_id
+        JOIN wypozyczenie w ON s.spis_id = w.spis_id
+        JOIN platnosc p ON w.wypozyczenie_id = p.wypozyczenie_id
+        WHERE k.nazwa = 'Akcja'
+        GROUP BY f.film_id
+        HAVING suma_platnosci > (
+            SELECT AVG(sumy.suma)
+            FROM (
+                SELECT SUM(p2.kwota) AS suma
+                FROM film f2
+                JOIN film_kategoria fk2 ON f2.film_id = fk2.film_id
+                JOIN kategoria k2 ON fk2.kategoria_id = k2.kategoria_id
+                JOIN spis s2 ON f2.film_id = s2.film_id
+                JOIN wypozyczenie w2 ON s2.spis_id = w2.spis_id
+                JOIN platnosc p2 ON w2.wypozyczenie_id = p2.wypozyczenie_id
+                WHERE k2.nazwa = 'Akcja'
+                GROUP BY f2.film_id
+            ) AS sumy
+        )
+    ) AS filmy_powyzej_sredniej
+);
+
+-- 28. Usuń filmy z aktorką PENELOPE GUINESS
+DELETE FROM film_akcja
+WHERE film_id IN (
+    SELECT DISTINCT fa.film_id
+    FROM film_aktor fa
+    JOIN aktor a ON fa.aktor_id = a.aktor_id
+    WHERE a.imie = 'PENELOPE' AND a.nazwisko = 'GUINESS'
+);
+
+-- 29. Usuń filmy wypożyczone <3 razy
+DELETE FROM film_akcja
+WHERE film_id IN (
+    SELECT film_id
+    FROM (
+        SELECT f.film_id, COUNT(w.wypozyczenie_id) AS liczba_wypozyczen
+        FROM film f
+        LEFT JOIN spis s ON f.film_id = s.film_id
+        LEFT JOIN wypozyczenie w ON s.spis_id = w.spis_id
+        GROUP BY f.film_id
+        HAVING liczba_wypozyczen < 3
+    ) AS rzadko_wypozyczane
+);
+
+-- 30. Usuń filmy ze słowem "Epic" w opisie
+DELETE FROM film_akcja
+WHERE film_id IN (
+    SELECT film_id
+    FROM film_opis
+    WHERE opis LIKE '%Epic%'
+);
+
+-- 31. Usuń filmy dla dorosłych (NC-17 i PG)
+DELETE FROM film_akcja
+WHERE ocena IN ('NC-17', 'PG');
+
+-- 32. Usuń tabelę film_akcja
+DROP TABLE IF EXISTS film_akcja;
