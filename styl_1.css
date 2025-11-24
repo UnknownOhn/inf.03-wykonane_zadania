@@ -1,0 +1,51 @@
+* {
+    font-family: Cambria;
+}
+
+header, footer {
+    background-color: #829eb9;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+main {
+    display: flex;
+}
+
+.lewy, .prawy {
+    background-color: #B3C6D9;
+    height: 400px;
+    width: 25%;
+    padding-top: 100px;
+}
+
+.srodek {
+    background-color: #E0e9f1;
+    width: 50%;
+    height: 400px;
+    text-align: center;
+    padding-top: 100px;
+}
+
+table {
+    border: solid 1px dimgray;
+    border-collapse: collapse;
+    width: 80%;
+    margin: auto;
+
+}
+
+table th, table td {
+    border: solid 1px dimgray;
+}
+
+table th:hover, table td:hover {
+    background-color: steelblue;
+    color: white;
+}
+
+img {
+    border-radius: 20px;
+    width: 100%;
+}
