@@ -1,0 +1,15 @@
+-- 1
+SELECT uslugi.cena, uslugi.nazwa
+FROM uslugi
+WHERE uslugi.cena >= 50;
+
+-- 2
+SELECT AVG(uslugi.cena) AS 'Średnia cena arytmetyczna', COUNT(*) AS 'Liczba usług'
+FROM uslugi
+GROUP BY uslugi.rodzaj = "1";
+
+-- 3
+CREATE USER 'kosmetyczka'@'host' IDENTIFIED BY 'Kosmet34';
+
+-- 4
+GRANT SELECT, UPDATE ON salon.uslugi TO 'kosmetyczka'@'localhost';
