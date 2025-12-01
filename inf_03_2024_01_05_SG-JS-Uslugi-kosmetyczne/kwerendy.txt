@@ -1,0 +1,15 @@
+-- zapytanie 1
+SELECT uslugi.nazwa, uslugi.cena 
+FROM uslugi 
+WHERE uslugi.cena >= 50; 
+
+-- zapytanie 2
+SELECT AVG(uslugi.cena) AS 'Średnia cen', COUNT(uslugi.rodzaj) AS 'Liczba uslug'
+FROM uslugi
+WHERE uslugi.rodzaj = 1;
+
+
+-- zapytanie 3
+CREATE USER 'kosmetyczka'@'host' IDENTIFIED BY 'Kosmet34';
+
+-- zapytanie
