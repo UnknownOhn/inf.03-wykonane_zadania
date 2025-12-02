@@ -1,0 +1,10 @@
+-- zapytanie 1
+SELECT kursy.kod, kursy.nazwa, kursy.cena
+FROM kursy
+ORDER BY kursy.cena DESC;
+
+-- zapytanie 2
+SELECT kursy.nazwa
+FROM kursy;
+
+-- zapytanie 3

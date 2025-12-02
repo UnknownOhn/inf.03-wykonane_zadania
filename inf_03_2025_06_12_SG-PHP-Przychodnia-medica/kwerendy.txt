@@ -1,0 +1,20 @@
+-- zapytanie 1
+SELECT abonamenty.nazwa, abonamenty.cena, abonamenty.opis 
+FROM abonamenty;
+
+-- zapytanie 2
+SELECT ROUND(AVG(abonamenty.cena), 2) AS 'Srednio_abonament' 
+FROM abonamenty;
+
+-- zapytanie 3
+SELECT abonamenty.nazwa, cechy.cecha
+FROM abonamenty
+JOIN szczegolyabonamentu ON abonamenty.id = szczegolyabonamentu.Abonamenty_id
+JOIN cechy ON cechy.id = szczegolyabonamentu.Cechy_id
+WHERE abonamenty.id = 1;
+
+
+-- zapytanie 4
+SELECT abonamenty.nazwa, abonamenty.opis
+FROM abonamenty
+WHERE abonamenty.opis LIKE "%zdrowie%" OR "%opieką%";
