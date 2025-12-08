@@ -8,3 +8,13 @@ SELECT kursy.nazwa
 FROM kursy;
 
 -- zapytanie 3
+INSERT INTO uczestnicy (imie, nazwisko, wiek)
+VALUES ("Tadeusz", "Wysocki", 36)
+
+-- zapytanie 4
+SELECT kursy.nazwa, COUNT(uczestnicy.id_uczestnika) AS "Zapisanych"
+FROM kursy
+JOIN uczestnicy ON uczestnicy.id_uczestnika = kursy_uczestnicy.id_uczestnika
+JOIN kursy ON kursy.kod = kursy_uczestnicy.kod_kursu;
+
+(nie pracuje)
