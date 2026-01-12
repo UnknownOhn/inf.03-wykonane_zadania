@@ -1,0 +1,20 @@
+-- zapytanie 1
+SELECT LOWER(wojewodztwa.nazwa) 
+FROM wojewodztwa;
+
+-- zapytanie 2
+SELECT COUNT(miasta.id) 
+FROM miasta 
+WHERE miasta.id_wojewodztwa = 1;
+
+-- zapytanie 3
+SELECT miasta.nazwa, wojewodztwa.nazwa
+FROM miasta
+JOIN wojewodztwa ON wojewodztwa.id = miasta.id_wojewodztwa
+WHERE miasta.nazwa LIKE "Lu%";
+
+-- zapytanie 4
+SELECT wojewodztwa.nazwa, COUNT(miasta.id) AS "Liczba miast"
+FROM wojewodztwa
+JOIN miasta ON miasta.id_wojewodztwa = wojewodztwa.id
+GROUP BY wojewodztwa.nazwa;
