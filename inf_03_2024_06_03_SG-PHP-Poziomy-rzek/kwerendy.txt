@@ -1,0 +1,20 @@
+-- kwerenda 1
+SELECT nazwa,rzeka,stanAlarmowy
+FROM wodowskazy
+
+-- kwerenda 2
+SELECT nazwa, rzeka, stanOstrzegawczy, stanAlarmowy, stanWody
+FROM wodowskazy
+JOIN pomiary ON pomiary.wodowskazy_id = wodowskazy.id
+WHERE dataPomiaru = "2022-05-05";
+
+-- kwerenda 3
+SELECT nazwa, rzeka, stanOstrzegawczy, stanAlarmowy, stanWody
+FROM wodowskazy
+JOIN pomiary ON pomiary.wodowskazy_id = wodowskazy.id
+WHERE dataPomiaru = "2022-05-05" AND stanWody > stanAlarmowy;
+
+-- kwerenda 4
+SELECT pomiary.dataPomiaru, AVG(pomiary.stanWody)
+FROM pomiary
+GROUP BY dataPomiaru;
