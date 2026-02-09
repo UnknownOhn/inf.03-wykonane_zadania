@@ -1,0 +1,44 @@
+* {
+    font-family: century;
+}
+
+header {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+header, footer {
+    background-color: #CCA10B;
+    color: white;
+    font-style: italic;
+    padding: 5px;
+    text-align: center;
+}
+
+img {
+
+}
+
+.lewy, .prawy {
+    float: left;
+    background-color: rgba(5, 160, 88. 0.8);
+}
+
+.lewy {
+    text-align: left;
+    width: 70%;
+    height: 620px;
+}
+
+.prawy {
+    font-family: 'LuciedaConsole', 'Consolas', 'Courier New', monospace;
+    width: 30%;
+    height: 600px;
+    margin-top: 20px;
+    font-size: 14px;
+    letter-spacing: 1px;
+}

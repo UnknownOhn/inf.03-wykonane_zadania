@@ -1,0 +1,21 @@
+-- zapytanie 1
+SELECT uczniowie.imie, uczniowie.nazwisko, uczniowie.klasa
+FROM uczniowie
+where uczniowie.klasa = '2B';
+
+-- zapytanie 2
+SELECT COUNT(*)-COUNT(uczniowie.id_alergii) AS 'uczniownie_bez_alergii', COUNT(uczniowie.id_alergii) AS 'uczniownie_z_alergia'
+FROM uczniownie;
+
+-- zapytanie 3
+SELECT DISTINCT uczniowie.imie, uczniowie.nazwisko, uczniowie.klasa
+FROM uczniowie
+JOIN zamowienia ON zamowienia.id_ucznia = uczniowie.id_ucznia
+JOIN posilki ON posilki.id_posilku = zamowienia.id_posilku
+WHERE posilki.wegetarianski = 1;
+
+-- zapytanie 4
+SELECT typy_posilkow.nazwa, COUNT(posilki.id_posilku)
+FROM typy_posilkow
+JOIN posilki ON typy_posilkow.id_typu = posilki.id_typu
+GROUP BY typy_posilkow.nazwa;
