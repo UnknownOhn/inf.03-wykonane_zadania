@@ -1,0 +1,18 @@
+main{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+section{
+    background-color: #c6c6c6;
+    border: 2px solid rgb(0, 0, 0);
+    flex-direction: column;
+    display: flex;
+    width: 90%;
+    margin: auto;
+    padding: 18px;
+}
+
+

@@ -1,0 +1,10 @@
+CREATE DATABASE sklep COLLATE utf8_polish_ci;
+
+USE sklep;
+
+CREATE TABLE produkty (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nazwa varchar(50),
+    cena decimal(10, 2),
+   	ilosc decimal(10, 4)
+);
