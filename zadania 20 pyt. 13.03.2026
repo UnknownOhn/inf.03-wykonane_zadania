@@ -1,0 +1,89 @@
+-- Wyświetl liczbę wszystkich osób w tabeli osoby.
+SELECT *
+from osoby;
+-- Policz, ile jest numerów telefonów typu komórkowy, a ile stacjonarny (użyj GROUP BY).
+SELECT telefony.typ, COUNT(*) 
+FROM telefony
+GROUP BY telefony.typ;
+-- Wyświetl liczbę zamówień złożonych przez każdą osobę (imię, nazwisko, liczba zamówień).
+SELECT osoby.imie, osoby.nazwisko, COUNT(zamowienia.id_zamowienia)
+FROM osoby
+JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby
+GROUP BY osoby.id_osoby;
+-- Oblicz łączną wartość wszystkich zamówień w tabeli zamowienia.
+SELECT SUM(zamowienia.kwota)
+FROM zamowienia;
+-- Wyświetl średnią wartość zamówienia.
+SELECT AVG(zamowienia.kwota)
+FROM zamowienia;
+-- Wyświetl dla każdej osoby: imię, nazwisko, miasto, liczbę zamówień.
+SELECT osoby.imie, osoby.nazwisko, adresy.miasto, COUNT(zamowienia.id_zamowienia)
+FROM osoby
+JOIN adresy ON adresy.id_osoby = osoby.id_osoby
+JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby
+GROUP BY osoby.id_osoby;
+-- Wyświetl sumę wydanych pieniędzy przez każdą osobę (imię, nazwisko, suma kwot).
+SELECT SUM(zamowienia.kwota), osoby.imie, osoby.nazwisko
+FROM osoby
+JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby
+GROUP BY osoby.id_osoby;
+-- Wyświetl osoby, które nie złożyły żadnego zamówienia (użyj LEFT JOIN).
+SELECT osoby.imie, osoby.nazwisko, zamowienia.id_zamowienia
+FROM osoby
+LEFT JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby
+WHERE zamowienia.id_zamowienia is null;
+-- Wyświetl średnią wartość zamówień dla każdej osoby.
+SELECT AVG(zamowienia.kwota), osoby.imie, osoby.nazwisko
+FROM zamowienia
+JOIN osoby ON osoby.id_osoby = zamowienia.id_osoby
+GROUP BY osoby.id_osoby;
+-- Wyświetl miasto oraz łączną kwotę zamówień osób z danego miasta.
+
+-- Wyświetl osoby, które wydały łącznie więcej niż 2123 zł (HAVING).
+SELECT osoby.imie, osoby.nazwisko, SUM(zamowienia.kwota)
+FROM osoby
+JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby
+GROUP BY osoby.id_osoby
+HAVING SUM(zamowienia.kwota) > 2123;
+-- Policz, ile zamówień zostało złożonych w każdej dacie.
+SELECT zamowienia.data_zamowienia, COUNT(zamowienia.id_zamowienia)
+FROM zamowienia 
+GROUP BY zamowienia.id_zamowienia;
+-- Wyświetl średnią kwotę zamówień w podziale na typ telefonu osoby.
+SELECT AVG(zamowienia.kwota), telefony.typ
+FROM osoby
+JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby
+JOIN telefony ON telefony.id_osoby = osoby.id_osoby
+GROUP BY osoby.id_osoby;
+--  Wyświetl osobę, która złożyła najdroższe zamówienie (JOIN + MAX).
+SELECT osoby.imie, osoby.nazwisko, MAX(zamowienia.kwota)
+FROM osoby
+JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby;
+-- Wyświetl 3 osoby, które wydały najwięcej pieniędzy (sortowanie malejące).
+SELECT osoby.imie, osoby.nazwisko, zamowienia.kwota
+FROM osoby
+JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby
+ORDER BY osoby.id_osoby DESC
+LIMIT 3;
+-- Wyświetl liczbę osób w każdym mieście.
+SELECT COUNT(osoby.id_osoby), adresy.miasto
+FROM adresy
+JOIN osoby ON adresy.id_osoby = osoby.id_osoby
+GROUP BY adresy.miasto;
+-- Wyświetl miasto, w którym suma zamówień była największa.
+SELECT adresy.miasto, SUM(zamowienia.id_zamowienia)
+FROM adresy
+JOIN osoby ON osoby.id_osoby = adresy.id_osoby
+JOIN zamowienia on zamowienia.id_osoby = osoby.id_osoby
+GROUP BY adresy.miasto;
+-- Policz, ile osób ma więcej niż jedno zamówienie.
+SELECT COUNT(zamowienia.id_zamowienia), osoby.imie, osoby.nazwisko
+FROM osoby
+JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby
+WHERE zamowienia.id_zamowienia> 1;
+-- Wyświetl dla każdej osoby: imię, nazwisko, liczbę zamówień, sumę zamówień, średnią wartość zamówienia (jedno zapytanie).
+SELECT osoby.imie, osoby.nazwisko, SUM(zamowienia.id_zamowienia), AVG(zamowienia.kwota), COUNT(zamowienia.id_zamowienia)
+FROM osoby
+JOIN zamowienia ON zamowienia.id_osoby = osoby.id_osoby
+GROUP BY osoby.id_osoby;
+-- Wyświetl osoby, których średnia wartość zamówień jest wyższa od ogólnej średniej wszystkich zamówień.s
