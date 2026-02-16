@@ -1,0 +1,90 @@
+-- Zapytanie 1: wybierające jedynie id, imię i nazwisko maturzystów ze szkoły „T3", posortowane rosnąco według nazwiska
+SELECT maturzysta.imie, maturzysta.id, maturzysta.nazwisko
+FROM maturzysta
+WHERE maturzysta.szkola = "T3"
+ORDER BY maturzysta.nazwisko DESC;
+
+-- Zapytanie 2: wybierające jedynie nazwy przedmiotów maturalnych z tabeli arkusz. Nazwy przedmiotów nie mogą się powtarzać
+SELECT DISTINCT arkusz.przedmiot
+FROM arkusz;
+
+-- Zapytanie 3: wybierające jedynie rok dla najstarszego i najmłodszego arkusza maturalnego
+SELECT MIN(arkusz.rok) AS 'najmłodszy rok', MAX(arkusz.rok) AS 'najstarszy rok'
+FROM arkusz;
+
+-- Zapytanie 4: wybierające jedynie id maturzysty oraz średnią ze wszystkich punktów otrzymanych przez tego maturzystę. Srednia punktów ma nazwę kolumny (alias) „Wynik". Dane nalez posortować malejąco według obliczonej średniej i wyświetlić tylko 1 rekord. (Zapytanie grupujące które wybiera maturzystę z najlepszym średnim wynikiem punktów)
+SELECT wynik.maturzysta_id, AVG(wynik.punkty) AS 'Wynik'
+FROM wynik
+GROUP BY wynik.maturzysta_id
+ORDER BY Wynik DESC
+LIMIT 1;
+
+-- Zapytanie 5: wybierające jedynie rok, sesję i przedmiot z tabeli arkusz oraz odpowiadające ten punkty z tabeli wynik dla id maturzysty 31. Należy posłużyć się relacją
+SELECT arkusz.rok, arkusz.sesja, arkusz.przedmiot, wynik.punkty
+FROM arkusz 
+JOIN wynik ON arkusz.symbol = wynik.symbol
+WHERE wynik.maturzysta_id = 31;
+
+
+
+
+
+
+
+-- Zapytanie 1: Liczące średnią temperaturę dia miesiąca o identyfikatorze 7. Wyliczona wartość jest zaokrąglona do dwóch miejsc po przecinku
+SELECT ROUND(AVG(pomiary.temperatura), 2)
+FROM pomiary
+WHERE pomiary.id_miesiac = 7;
+
+-- Zapytanie 2: Wstawiające do tabeli miejscowosc wiersz z danymi „Kijów", „Ukraina". Klucz nadawany automatycznie
+INSERT INTO miejscowosc (nazwa, kraj) 
+VALUES ('Kijów', 'Ukraina');
+
+-- Zapytanie 3: Wybierające jedynie nazwy miast i krajów z tabeli miejscowosc oraz odpowiadające im temperatury w miesiącu o identyikatorze 7. Należy poslużyć się relacją
+SELECT miejscowosc.nazwa, miejscowosc.kraj, pomiary.temperatura
+FROM miejscowosc 
+JOIN pomiary ON miejscowosc.id = pomiary.id_miejscowosc
+WHERE pomiary.id_miejscowosc = 7;
+
+-- Zapytanie 4: Wybierające jedynie nazwy miesięcy z tabeli miesiace oraz odpowiadające im średnie temperatury. Należy poslużyć się relacją
+SELECT miesiace.nazwa, AVG(pomiary.temperatura) AS 'Srednia_Temperatura'
+FROM miesiace
+JOIN pomiary ON miesiace.id = pomiary.id_miesiac
+GROUP BY miesiace.nazwa;
+
+
+
+
+
+
+-- Zapytanie 1: Zapytanie 1: wybierające 10 pierwszych rekordów z tabeli towar, jedynie pola nazwa i plik
+SELECT towar.nazwa, towar.plik
+FROM towar
+LIMIT 10;
+-- Zapytanie 2: Zapytanie 2: wybierające jedynie identyfikator i nazwę towarów
+SELECT towar.id, towar.nazwa
+FROM towar;
+-- Zapytanie 3: Zapytanie 3: wybierające jedynie rodzaj, nazwę i cenę towaru o identyfikatorze 1
+SELECT towar.rodzaj, towar.nazwa, towar.cena
+FROM towar
+WHERE towar.id = 1;
+-- Zapytanie 4: Zapytanie 4: wstawiające do tabeli zamowienie rekord o wartościach: towar o identyfikatorze 9, sklep o identyfikatorze 2, liczba kilogramów 20, klucz główny nadawany automatycznie
+INSERT INTO zamowienie (id_towar, id_sklep, liczba_kg)
+VALUES (9, 2, 20);
+
+
+
+
+
+
+-- Zapytanie 1: Zapytanie 1: wybierające pierwsze 15 rekordów, jedynie pola: marka, model, cena dla pojazdów, których marka to BM posortowane malejąco według ceny
+SELECT pojazdy.marka, p.model, p.cena
+FROM pojazdy
+WHERE pojazdy.marka = 'BM'
+order BY p.cena ASC;
+-- Zapytanie 2: Zapytanie 2: liczące średnią cenę pojazdów oraz wybierające najdroższy pojazd dla modelu "meta". Nazwy kolumn (aliasy) odpowiednio: „Srednia cena" ", „Maksymalna cena"
+
+-- Zapytanie 3: Zapytanie 3: wybierające z tabeli pojazdy jedynie pola: marka, model, cena oraz relacja odpowiadające im z tabeli kolory pola: nazwa, doplata dla modelu "alfa". Należy poslużyć się
+
+-- Zapytanie 4: Zapytanie 4: losujące dwa dowolne rekordy z tabeli pojazdy i wybierające jedynie markę, model i cenę
+
