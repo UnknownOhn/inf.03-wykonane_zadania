@@ -1,0 +1,67 @@
+select distinct kursy.magazyn_koncowy
+from kursy
+join magazyn on kursy.magazyn_poczantkowy = magazyny.nazwa
+where magazyny.nazwa LIKE "%Torun%";
+
+
+SELECT DISTINCT pojazdy.model
+FROM pojazdy
+WHERE pojadzy.ladownosc <= 3,5;
+
+SELECT kursy.magazyn_poczatkowy, kursy.magazyn_koncowy, COUNT(kursy.lp), SUM(kursy.data_koncowa - data_poczatkowa)
+FROM kursy
+GROUP BY kursy.magazyn_poczatkowy, kursy.magazyn_koncowy
+ORDER BY count(LP) DESC, magazyn ASC;
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+-- 1
+SELECT składy.nr_skladu
+FROM sklady
+WHERE NOT EXISTS
+	(SELECT wyjechały)
+
+-- 2
+SELECT bilety.nr_biletu
+FROM bilety
+WHERE bitely.nr_przejazdy = 504
+ORDER BY bilety.ilosc DESC;
+
+-- 3
+SELECT DISTINKT skład.lokomtywa
+FROM skład
+;
+
+-- 4
+SELECT bilety.nr_przyjazdu, SUM(bilety.cena * bilety.ilosc - bielety.cena * bilety.ilosc * bilety.ulga)
+FROM bilety
+GROUP BY bilrty.nr_przejazdy
+ORDER BY SUM(bilety.cena * bilety.ilosc - bielety.cena * bilety.ilosc * bilety.ulga)
+LIMIT 1;
+
+-- 5
+SELECT SUM(bilety.ilosc) 
+FROM przejadzy
+JOIN bilety ON 
+GROUP BY stacja_poczatkowa DESC
+LIMIT 1
+
+-- 6
+SELECT nr_przejazdu, FROM przejazdy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
