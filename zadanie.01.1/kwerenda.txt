@@ -1,0 +1,7 @@
+SELECT uczniowie.imie, uczniowie.nazwisko, ROUND(AVG(oceny.ocena), 2)
+FROM uczniowie
+JOIN oceny ON oceny.id_ucznia = uczniowie.id_ucznia
+GROUP BY uczniowie.id_ucznia
+ORDER BY uczniowie.imie, uczniowie.nazwisko;
+
+INSERT into oceny (id_ucznia, ocena) VALUES

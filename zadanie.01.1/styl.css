@@ -1,0 +1,28 @@
+* {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+section {
+    text-align: center;
+    background-color: rgb(233, 98, 98);
+}
+
+footer, header {
+    background-color: brown;
+    color: white;
+}
+
+header{
+    text-align: center;
+}
+
+table {
+    text-align: center;
+}
+
+td:hover{
+    background-color: rgb(216, 66, 141);
+    color: white;
+}
