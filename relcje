@@ -1,0 +1,53 @@
+-- Utwórz relację jeden-do-wielu (1:N) między tabelami classes -> students. Dodaj odpowiedni FOREIGN KEY do tabeli students.
+INSERT INTO students (students.student_id, students.first_name, students.last_name, students.class_id) VALUES
+('1', 'Jan', 'Nowak', '3'),
+('2', 'Anna', 'Maj', '2'),
+('3', 'Kuba', 'Wolski', '1'),
+('4', 'Marek', 'Nowacki','1'),
+('5', 'Krys', 'Miedw', '2');
+
+ALTER TABLE students
+AND CONSTRAINT fk_classid
+FOREIGN KEY (class_id)
+REFERENCES classes(class_id);
+
+-- Utwórz relację jeden-do-wielu (1:N) między tabelami teachers -> subjects. Każdy przedmiot musi mieć przypisanego nauczyciela. Dodaj odpowiedni FOREIGN KEY.
+INSERT INTO teachers (teachers.teacher_id, teachers.first_name, teachers.last_name) VALUES
+('1', 'Julia', 'Karton'),
+('2', 'Anton', 'Slowiak'),
+('3', 'Mark', 'Treons');
+
+INSERT INTO subjects (subjects.subject_id, subjects.subject_name, subjects.teacher_id) VALUES
+('1', 'Matematyka', '1'),
+('2', 'Polski', '2'),
+('3', 'Anhielski', '2'),
+('4', 'historia', '3');
+
+-- Utwórz relację jeden-do-wielu (1:N) między tabelami students -> grades. Każdy uczeń może mieć wiele ocen.
+ALTER TABLE grades
+AND CONSTRAINT fk_studentid
+FOREIGN KEY (student_id)
+REFERENCES students(student_id);
+
+-- Utwórz relację jeden-do-wielu (1:N) między tabelami subjects -> grades. Każda ocena musi należeć do konkretnego przedmiotu.
+ALTER TABLE grades
+AND CONSTRAINT fk_subjectid
+FOREIGN KEY (subject_id)
+REFERENCES subjects(subject_id);
+
+-- Tabela student_subjects ma realizować relację wiele-do-wielu (N:M) między students <-> subjects. Dodaj dwa FOREIGN KEY oraz PRIMARY KEY złożony.
+ALTER TABLE student_subjects
+AND CONSTRAINT fk_
+FOREIGN KEY (student_id)
+REFERENCES students(student_id);
+
+-- Zmodyfikuj tabelę grades, aby ocena mogła przyjmować tylko wartości 1–6. Dodaj odpowiednie ograniczenie.
+
+-- Dodaj do tabeli students nową relację 1:1 między students a tabelą student_profiles, którą musisz utworzyć. Tabele nowoutworzona będzie przechowywać:
+-- adres VARCHAR(50)
+-- miasto VARCHAR(30)
+-- telefon VARCHAR(11)
+
+-- Zmodyfikuj relację students -> classes tak aby przy usunięciu klasy uczniowie nie byli usuwani, ich class_id ustawiał się na NULL.
+
+-- Dodaj indeks do kolumny grades.student_id. Wyjaśnij, dlaczego indeks może przyspieszyć działanie zapytań.
