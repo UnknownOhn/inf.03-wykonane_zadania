@@ -7,7 +7,7 @@ INSERT INTO students (students.student_id, students.first_name, students.last_na
 ('5', 'Krys', 'Miedw', '2');
 
 ALTER TABLE students
-AND CONSTRAINT fk_classid
+ADD CONSTRAINT fk_classid
 FOREIGN KEY (class_id)
 REFERENCES classes(class_id);
 
@@ -25,19 +25,19 @@ INSERT INTO subjects (subjects.subject_id, subjects.subject_name, subjects.teach
 
 -- Utwórz relację jeden-do-wielu (1:N) między tabelami students -> grades. Każdy uczeń może mieć wiele ocen.
 ALTER TABLE grades
-AND CONSTRAINT fk_studentid
+ADD CONSTRAINT fk_studentid
 FOREIGN KEY (student_id)
 REFERENCES students(student_id);
 
 -- Utwórz relację jeden-do-wielu (1:N) między tabelami subjects -> grades. Każda ocena musi należeć do konkretnego przedmiotu.
 ALTER TABLE grades
-AND CONSTRAINT fk_subjectid
+ADD CONSTRAINT fk_subjectid
 FOREIGN KEY (subject_id)
 REFERENCES subjects(subject_id);
 
 -- Tabela student_subjects ma realizować relację wiele-do-wielu (N:M) między students <-> subjects. Dodaj dwa FOREIGN KEY oraz PRIMARY KEY złożony.
 ALTER TABLE student_subjects
-AND CONSTRAINT fk_
+ADD CONSTRAINT fk_
 FOREIGN KEY (student_id)
 REFERENCES students(student_id);
 
