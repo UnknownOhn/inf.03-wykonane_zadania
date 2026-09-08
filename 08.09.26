@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     Podaj imie <input type="text" id="name">
+     <input type="button" value="przeslij" onclick="witaj()">
+     <div id="wynik">!!! TU BEDZIE WYNIK !!!</div>
+    <script>
+        function witaj(){
+            imie = document.getElementById("name").value 
+            // alert(imie)
+            // document.write("witaj "+imie)
+            document.getElementById("wynik").innerHTML="witaj "+imie
+        }
+    </script>
+</body>
+</html>
