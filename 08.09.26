@@ -19,3 +19,32 @@
     </script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    Podaj x <input type="number" id="x"> <br>    
+    Podaj y <input type="number" id="y"> 
+    <input type="button" value="iloczyn" onclick="iloczyn()">
+    <input type="button" value="suma" onclick="suma()">
+    <div id="wynik"></div>
+    <script>
+        function suma(){
+            x = document.getElementById("x").value
+            y = document.getElementById("y").value
+            suma = document.getElementById("wynik").innerHTML = x + y
+        }
+
+        function iloczyn(){
+            x = document.getElementById("x").value
+            y = document.getElementById("y").value
+            iloczyn = document.getElementById("wynik").innerHTML = x * y
+        }
+    </script>
+</body>
+</html>
