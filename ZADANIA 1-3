@@ -1,0 +1,75 @@
+ZADANIE 1
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <!-- zadanie 1-->
+    <input type="text" id="Nazwa">
+    <button onclick="wpisz()">Wpisz</button>
+    <p id="wynik">Najlepsza gra/film to: </p>
+
+    <script>
+        function wpisz(){
+            const nazwa = document.getElementById("Nazwa").value
+            document.getElementById("wynik").innerHTML = "Najlepsza gra/film to: " + nazwa + "!"
+        }
+        // zadanie 1
+    </script>
+</body>
+</html>
+
+ZADANIE 2
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="number" id="trasa" name="wpisz-km">
+    <input type="number" id="spalanie" name="wpisz-litry">
+    <button onclick="oblicz()">Oblicz paliwo</button>
+    <p id="wynik"></p>
+
+    <script>
+        function oblicz(){
+            const ilekm = document.getElementById("trasa").value 
+            const ilespalanie = document.getElementById("spalanie").value 
+
+            const koniec = ilekm / 100 * ilespalanie
+            const cenalitra = 7
+            const wynik = document.getElementById("wynik").innerHTML = "Do zapłaty: " + koniec * cenalitra + "zł"
+
+            }
+    </script>
+</body>
+</html>
+
+ZADANIE 3
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styl3.css">
+</head>
+<body>
+    <input type="number" id="iloscPunkt" >
+    <input type="number" id="maksPunkt">
+    <p id="wynik"></p>
+
+    <script>
+        function wynik(){
+            
+        }
+    </script>
+</body>
+</html>
