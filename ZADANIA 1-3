@@ -62,13 +62,30 @@ ZADANIE 3
     <link rel="stylesheet" href="styl3.css">
 </head>
 <body>
-    <input type="number" id="iloscPunkt" >
-    <input type="number" id="maksPunkt">
+    <input type="number" id="iloscPunkt" min="0">
+    <input type="number" id="maksPunkt" max="100">
+    <button onclick="Wpisz()">Wpisz</button>
     <p id="wynik"></p>
 
     <script>
-        function wynik(){
+        function Wpisz(){
+           const punkty = document.getElementById("iloscPunkt").value 
+           const maxpunkt = document.getElementById("maksPunkt").value
+           const konec = punkty / maxpunkt * 100
+           if (konec >=75){
+                const el = document.getElementById("wynik")
+                
+                //el.innerHTML = "<h3 style='color: green; background-color: yellow;'>Gratulacje użytkowniku! Zdałeś</h3>"
+                el.innerHTML = "Zdałeś!"
+                el.style.color = "green" 
+                el.style.backgroundColor = "lightblue"
+            } else{
+            const element = document.getElementById("wynik")
             
+            element.innerHTML = "Nie zdałeś :("
+            element.style.color = "red"
+            element.style.backgroundColor = "yellow"
+           }
         }
     </script>
 </body>
